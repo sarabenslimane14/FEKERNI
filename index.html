@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-family:system-ui,sans-serif;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>FEKERNI Interface</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Concept: a calm column inside a real iPhone. The medicine is the hero of every patient screen.
+   Dwa lwl is a round blue tablet, Dwa tani is an orange capsule, so shape and colour both tell them apart.
+   A faint zellige star pattern sits behind the pictures and nowhere near the text.
+   Palette: Majorelle indigo = reminder, green = Done, clay = Help and urgent, saffron = again.
+   Type: Atkinson Hyperlegible (made for low vision), Noto Sans Arabic for Darija. */
+:root{
+  --p-bg:#F2F5FB; --p-card:#FFFFFF; --p-ink:#10193A; --p-ink2:#3B4666; --p-line:#6B7699; --p-hair:#DCE2F0;
+  --p-blue:#2340B8; --p-blue-dark:#16297C; --p-blue-soft:#E3E8FA;
+  --p-green:#117A4D; --p-green-dark:#0A5535; --p-green-soft:#DDF3E8;
+  --p-clay:#B3321A; --p-clay-soft:#FBE3DC;
+  --p-amber:#FFE7A8; --p-amber-ink:#4A3000; --p-saf:#D97706; --p-saf-dark:#9A4F00; --p-saf-soft:#FFEFD0;
+  --font:"Atkinson Hyperlegible","Segoe UI",Arial,Helvetica,sans-serif;
+  --bg:#E9EDF6; --panel:#FFFFFF; --fg:#10193A; --muted:#3F4A6B; --edge:#C5CCE0; --chip:#F1F4FB; --chip-on:#2340B8; --chip-on-fg:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0D1226;--panel:#161C36;--fg:#E8ECFA;--muted:#A9B3D6;--edge:#2D365C;--chip:#1F2745;--chip-on:#9FB4FF;--chip-on-fg:#0D1226;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0D1226;--panel:#161C36;--fg:#E8ECFA;--muted:#A9B3D6;--edge:#2D365C;--chip:#1F2745;--chip-on:#9FB4FF;--chip-on-fg:#0D1226;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.5;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1.pg{font-size:26px;line-height:1.2;margin:0 0 6px;text-wrap:balance}
+.lead{margin:0 0 20px;color:var(--muted);max-width:68ch}
+.layout{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.stage{flex:0 1 auto;min-width:0;max-width:100%}
+#box{overflow:hidden}
+.jump{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;max-width:min(437px,100%)}
+.jump .grp{flex:0 0 100%;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.chip{font:inherit;font-size:14px;padding:7px 12px;border-radius:999px;border:1px solid var(--edge);background:var(--chip);color:var(--fg);cursor:pointer;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-fg);border-color:var(--chip-on)}
+.chip:focus-visible,.sel:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.sel{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--edge);background:var(--chip);color:var(--fg);border-radius:8px;min-height:36px}
+.notes{flex:1 1 320px;min-width:0;max-width:520px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:20px 22px}
+.notes h2{font-size:18px;margin:0 0 10px}
+.notes h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.notes ul{margin:0;padding-left:18px}
+.notes li{margin-bottom:6px}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;margin-top:8px}
+.sw div{border:1px solid var(--edge);border-radius:8px;overflow:hidden;font-size:12px}
+.sw i{display:block;height:34px}
+.sw span{display:block;padding:4px 6px;color:var(--muted)}
+.scaler{transform-origin:top left}
+
+/* ---------- iPhone 15 Pro style device ---------- */
+.device{position:relative;width:437px;height:888px}
+.iphone{position:absolute;left:4px;top:0;width:429px;height:888px;border-radius:72px;padding:4px;background:linear-gradient(145deg,#74757a 0%,#2b2c2f 28%,#55565b 52%,#242528 78%,#6b6c71 100%);box-shadow:0 34px 60px rgba(0,0,0,.30),0 0 0 1px rgba(255,255,255,.10) inset;isolation:isolate}
+.iphone .btn-side{position:absolute;width:4px;border-radius:2px;background:linear-gradient(90deg,#3a3b3f,#6d6e73)}
+.iphone .bl1{left:-3px;top:132px;height:34px}.iphone .bl2{left:-3px;top:206px;height:64px}.iphone .bl3{left:-3px;top:284px;height:64px}
+.iphone .br1{right:-3px;top:250px;height:104px;background:linear-gradient(270deg,#3a3b3f,#6d6e73)}
+.bezel{width:100%;height:100%;border-radius:68px;background:#000;padding:14px}
+.screen{position:relative;width:393px;height:852px;border-radius:54px;overflow:hidden;background:var(--p-bg);font-family:var(--font);color:var(--p-ink)}
+.screen,.screen *{box-sizing:border-box}
+[lang^=ar] .screen{font-family:"Noto Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:20px;background:#000;z-index:6}
+.sbar{position:absolute;top:0;left:0;right:0;height:54px;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:6px 34px 0 52px;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;font-weight:600;font-size:17px;color:#000;direction:ltr}
+.sbar .ic{display:flex;gap:6px;align-items:center}
+.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:139px;height:5px;border-radius:3px;background:#000;z-index:6;opacity:.92}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;padding:60px 20px 28px;gap:12px}
+.scr>*{flex-shrink:0}
+.scr>.spacer{flex:1 1 0;min-height:0}
+.scr>.art{flex:1 1 150px;min-height:110px;max-height:228px}
+.screen button{font-family:inherit;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent}
+.screen button:focus-visible{outline:4px solid var(--p-blue);outline-offset:3px}
+.ico{width:1em;height:1em;fill:currentColor;flex:none}
+.zl{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* patient: home */
+.top{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:24px;letter-spacing:-.01em;color:var(--p-blue-dark)}
+.brand svg{width:38px;height:38px;flex:none}
+.contact{display:flex;align-items:center;gap:8px;font-size:18px;color:var(--p-ink2);background:var(--p-card);border:2px solid var(--p-hair);border-radius:999px;padding:4px 14px 4px 5px}
+[dir=rtl] .contact{padding:4px 5px 4px 14px}
+.contact .av{width:30px;height:30px;font-size:16px;flex-basis:30px}
+.hello{display:flex;align-items:center;gap:14px}
+.hello .sun{flex:0 0 58px;height:58px;border-radius:50%;background:var(--p-saf-soft);color:var(--p-saf);display:flex;align-items:center;justify-content:center;font-size:38px}
+.greet{font-size:35px;line-height:1.1;font-weight:700;margin:0;letter-spacing:-.01em}
+.hero{position:relative;overflow:hidden;contain:paint;border-radius:30px;background:var(--p-blue-soft);padding:18px 20px;display:flex;gap:16px;align-items:center;border:0;width:100%;text-align:start;color:var(--p-ink)!important}
+.hero.m2{background:var(--p-saf-soft)}
+.hero .zl{color:var(--p-blue);opacity:.16}.hero.m2 .zl{color:var(--p-saf);opacity:.2}
+.hero>*:not(.zl){position:relative}
+.hero .hart{flex:0 0 104px;height:104px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center}
+.hero .hart svg{width:84px;height:84px}
+.hero .ht{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.hero .hn{font-size:36px;line-height:1.05;font-weight:700;letter-spacing:-.01em}
+.hero .hs{font-size:20px;color:var(--p-ink2)}
+.hero .hnow{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:var(--p-blue);color:#fff;font-weight:700;font-size:21px;padding:6px 14px;border-radius:999px;margin-top:4px}
+.hero.m2 .hnow{background:var(--p-saf-dark)}
+.sect{font-size:20px;font-weight:700;color:var(--p-ink2);margin:2px 4px -4px;letter-spacing:.02em}
+.mlist{display:flex;flex-direction:column;gap:10px}
+.mrow{display:flex;align-items:center;gap:14px;background:var(--p-card);border:2px solid var(--p-hair);border-radius:22px;padding:12px 16px;width:100%;text-align:start;min-height:78px}
+.mrow.now{border:3px solid var(--p-blue);background:var(--p-blue-soft)}
+.mic{flex:0 0 54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px}
+.mic.m1{background:var(--p-blue-soft);color:var(--p-blue)}.mic.m2{background:var(--p-saf-soft);color:var(--p-saf-dark)}
+.mrow.now .mic.m1{background:#fff}
+.mrow .mt{flex:1;min-width:0;display:flex;flex-direction:column}
+.mrow .mt b{font-size:25px;line-height:1.15}
+.mrow .mt small{font-size:17px;color:var(--p-ink2)}
+.mrow .mtime{font-size:23px;font-weight:700;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.mrow .tick{flex:0 0 34px;height:34px;border-radius:50%;background:var(--p-green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px}
+.mrow.dn .mt b{color:var(--p-ink2)}
+.banner{background:var(--p-green-soft);border-radius:26px;padding:16px 18px;display:flex;gap:16px;align-items:center}
+.banner .tick{flex:0 0 56px;height:56px;border-radius:50%;background:var(--p-green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px}
+.banner b{display:block;font-size:30px;line-height:1.1}
+.banner span{display:block;font-size:20px;color:var(--p-ink2);margin-top:2px}
+.hint{font-size:20px;color:var(--p-ink2);text-align:center;margin:0}
+
+/* patient: reminder */
+.band{display:flex;align-items:center;gap:12px;font-size:25px;font-weight:700;padding:11px 18px;border-radius:999px;background:var(--p-blue-soft);color:var(--p-blue-dark);align-self:flex-start}
+.band .ico{font-size:30px}
+.band.again{background:var(--p-amber);color:var(--p-amber-ink)}
+.art{position:relative;background:var(--p-blue-soft);border-radius:30px;display:flex;align-items:center;justify-content:center;padding:6px;overflow:hidden}
+.art.m2{background:var(--p-saf-soft)}
+.art .zl{color:var(--p-blue);opacity:.17}.art.m2 .zl{color:var(--p-saf);opacity:.22}
+.art svg.pic{position:relative;width:100%;height:100%;max-width:310px}
+.ptext{display:flex;flex-direction:column;gap:8px}
+.t1{font-size:46px;line-height:1.02;font-weight:700;letter-spacing:-.02em;margin:0}
+.t2{font-size:31px;line-height:1.15;margin:0}
+.t3{font-size:27px;line-height:1.25;color:var(--p-ink2);margin:0}
+.btns{display:flex;flex-direction:column;gap:14px}
+.btn-done{display:flex;align-items:center;justify-content:center;gap:16px;height:104px;border-radius:32px;border:0;background:var(--p-green);color:#fff!important;font-size:44px;font-weight:700;width:100%;box-shadow:0 7px 0 var(--p-green-dark)}
+.btn-done:active{transform:translateY(5px);box-shadow:0 2px 0 var(--p-green-dark)}
+.btn-help{display:flex;align-items:center;justify-content:center;gap:14px;height:86px;border-radius:30px;border:4px solid var(--p-clay);background:var(--p-card);color:var(--p-clay)!important;font-size:36px;font-weight:700;width:100%}
+.btn-help[disabled]{border-color:var(--p-line);color:var(--p-ink2)!important;background:var(--p-hair);cursor:default;font-size:30px}
+.btn-done .ico{font-size:56px}.btn-help .ico{font-size:42px}
+.okbig{width:132px;height:132px;border-radius:50%;background:var(--p-blue-soft);display:flex;align-items:center;justify-content:center;color:var(--p-blue);font-size:80px;align-self:center;margin-top:12px;position:relative}
+.okbig.g{background:var(--p-green-soft);color:var(--p-green)}
+.okbig::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:3px solid var(--p-blue);opacity:.25}
+.okbig.g::after{border-color:var(--p-green)}
+.center{text-align:center;align-items:center}
+.pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* caregiver */
+.chead{display:flex;align-items:center;gap:14px}
+.av{flex:0 0 52px;height:52px;border-radius:50%;background:var(--p-blue);color:#fff;font-weight:700;font-size:26px;display:flex;align-items:center;justify-content:center}
+.chead h2{font-size:32px;line-height:1.1;margin:0}
+.chead small{display:block;font-size:19px;color:var(--p-ink2);font-weight:400;margin-top:2px}
+.chead .bell{margin-inline-start:auto;flex:0 0 46px;height:46px;border-radius:50%;background:var(--p-clay-soft);color:var(--p-clay);display:flex;align-items:center;justify-content:center;font-size:26px}
+.back{display:flex;align-items:center;gap:6px;border:0;background:none;font-size:22px;font-weight:700;padding:8px 0;color:var(--p-blue-dark)!important;min-height:48px}
+[dir=rtl] .flip{transform:scaleX(-1)}
+.acard{display:block;width:100%;text-align:start;background:var(--p-card);border-radius:24px;border:2px solid var(--p-line);padding:0;overflow:hidden}
+.acard.urgent{border:3px solid var(--p-clay);box-shadow:0 8px 20px rgba(179,50,26,.14)}
+.alv{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 16px;background:var(--p-hair);color:var(--p-ink)}
+[lang^=ar] .alv{letter-spacing:0}
+.urgent .alv{background:var(--p-clay);color:#fff}
+.abody{padding:14px 16px;display:flex;gap:14px;align-items:flex-start}
+.abody .mic{flex:0 0 52px;height:52px;font-size:28px;background:var(--p-clay-soft);color:var(--p-clay)}
+.acard.old .abody .mic{background:var(--p-hair);color:var(--p-ink2)}
+.abody .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.atext{font-size:23px;line-height:1.25;font-weight:700;margin:0}
+.ameta{display:flex;justify-content:space-between;font-size:19px;color:var(--p-ink2)}
+.ameta .st{font-weight:700;color:var(--p-clay)}
+.acard.old{border:2px solid var(--p-hair);cursor:default}
+.acard.old .atext{font-weight:400;color:var(--p-ink2);font-size:21px}
+.acard.old .alv,.acard.old.urgent .alv{background:#EEF1F8;color:var(--p-ink2)}
+.acard.old.urgent{border:2px solid var(--p-hair);box-shadow:none}
+.sumline{font-size:26px;line-height:1.12;font-weight:700;margin:0;letter-spacing:-.01em}
+.facts{background:var(--p-card);border-radius:22px;border:2px solid var(--p-hair);overflow:hidden}
+.facts div{display:flex;gap:10px;padding:7px 14px;border-top:2px solid var(--p-hair);font-size:19px;line-height:1.2;align-items:center}
+.facts div:first-child{border-top:0}
+.facts .k{flex:0 0 112px;color:var(--p-ink2);font-size:17px}
+.facts .v{flex:1;min-width:0;font-weight:700;display:flex;align-items:center;gap:8px}
+.dotm{flex:0 0 14px;height:14px;border-radius:50%;background:var(--p-blue)}
+.dotm.m2{background:var(--p-saf)}
+.note{display:flex;gap:10px;align-items:flex-start;background:var(--p-amber);color:var(--p-amber-ink);border-radius:18px;padding:8px 12px;font-size:17px;line-height:1.25}
+.note.info{background:var(--p-blue-soft);color:var(--p-blue-dark)}
+.note .ico{font-size:26px;margin-top:1px}
+.btn-ack{display:flex;align-items:center;justify-content:center;gap:12px;height:72px;border-radius:26px;border:0;background:var(--p-green);color:#fff!important;font-size:32px;font-weight:700;width:100%;box-shadow:0 5px 0 var(--p-green-dark)}
+.btn-ack[disabled]{background:var(--p-hair);color:var(--p-ink2)!important;box-shadow:none;cursor:default}
+.btn-ghost{display:flex;align-items:center;justify-content:center;height:78px;border-radius:26px;border:3px solid var(--p-blue);background:var(--p-card);font-size:28px;font-weight:700;width:100%;color:var(--p-blue-dark)!important}
+.stbox{background:var(--p-card);border-radius:22px;border:2px solid var(--p-hair);padding:16px 18px;display:flex;flex-direction:column;gap:8px;font-size:23px;line-height:1.25}
+.stbox .nm{display:flex;align-items:center;gap:10px;font-weight:700}
+.pill{align-self:flex-start;display:inline-flex;gap:8px;align-items:center;font-size:20px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--p-amber);color:var(--p-amber-ink)}
+.pill.g{background:var(--p-green-soft);color:var(--p-green-dark)}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}.btn-done:active{transform:none}}
+
+.scr{overflow-y:auto;scrollbar-width:none}
+.scr::-webkit-scrollbar{display:none}
+.scr.tall{gap:12px}
+/* medicine identity: number + words + shape + colour */
+.medtag{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;font-size:22px;font-weight:700;padding:4px 16px 4px 4px;border-radius:999px;border:3px solid var(--p-blue);color:var(--p-blue-dark);background:#fff;line-height:1.1}
+[dir=rtl] .medtag{padding:4px 4px 4px 16px}
+.medtag b{flex:0 0 34px;height:34px;border-radius:50%;background:var(--p-blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px}
+.medtag.m2{border-color:var(--p-saf-dark);color:var(--p-saf-dark)}
+.medtag.m2 b{background:var(--p-saf-dark)}
+.tgs{display:flex;flex-wrap:wrap;gap:8px}
+.tg{display:inline-flex;align-items:center;gap:8px;font-size:22px;font-weight:700;padding:4px 14px;border-radius:12px;background:var(--p-card);border:2px solid var(--p-line);color:var(--p-ink)}
+.tg.typ{background:var(--p-ink);color:#fff;border-color:var(--p-ink)}
+.tg .ico{font-size:26px}
+.ptext{gap:8px}
+.t2{font-size:29px}
+.t3{font-size:25px}
+.t1{font-size:40px;overflow-wrap:anywhere}
+.band{font-size:22px}
+.band .ico{font-size:28px}
+/* home */
+.hero{flex-direction:column;align-items:stretch;gap:10px;padding:16px 18px}
+.hero .hrow{display:flex;gap:14px;align-items:center}
+.hero .hart{flex:0 0 92px;height:92px}
+.hero .hart svg{width:76px;height:76px}
+.hero .ht{gap:8px}
+.hero .hn{font-size:26px;line-height:1.05}
+.hero .big{display:flex;align-items:center;gap:10px;font-size:28px;font-weight:700;line-height:1.1;color:var(--p-blue-dark)}
+.hero.m2 .big{color:var(--p-saf-dark)}
+.hero .big .ico{font-size:34px}
+.hero .big.sm{font-size:26px}
+.hero .hs{font-size:22px;color:var(--p-ink2)}
+.hero .hs2{font-size:19px;line-height:1.2;color:var(--p-ink)}
+.mrow.nxt{border:3px solid var(--p-blue);background:var(--p-blue-soft)}
+.mrow.nxt.m2{border-color:var(--p-saf);background:var(--p-saf-soft)}
+.mrow .mt small{font-size:16px}
+/* caregiver */
+.btn-ghost.sm{height:56px;font-size:21px;gap:10px;border-radius:20px;border-width:3px}
+.btn-ghost .ico{font-size:28px}
+.note.call{background:var(--p-clay-soft);color:var(--p-clay);font-weight:700}
+.vv{display:flex;flex-direction:column}
+.vv small{font-weight:400;font-size:16px;color:var(--p-ink2)}
+.ftitle{font-size:30px;margin:0;line-height:1.1}
+.mc{background:var(--p-card);border:3px solid var(--p-blue);border-radius:22px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.mc.m2{border-color:var(--p-saf-dark)}
+.mch{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.edb{height:44px;padding:0 18px;border-radius:14px;border:3px solid var(--p-blue);background:#fff;font-size:20px;font-weight:700;color:var(--p-blue-dark)!important}
+.mcn{font-size:32px;font-weight:700;line-height:1.1}
+.mcl{display:flex;gap:10px;align-items:flex-start;font-size:19px;line-height:1.25;color:var(--p-ink2)}
+.mcl .ico{font-size:22px;margin-top:1px}
+.mcw{font-size:16px;color:var(--p-ink2)}
+.waitc{display:flex;gap:12px;align-items:flex-start;background:var(--p-amber);color:var(--p-amber-ink);border-radius:18px;padding:10px 14px;font-size:20px;line-height:1.25}
+.waitc .ico{font-size:30px;margin-top:2px}
+.waitc b{display:block;font-size:18px}
+.waitc small{display:block;font-size:16px;margin-top:2px}
+.waitc.off{background:var(--p-hair);color:var(--p-ink2);font-size:18px}
+.ftop{display:flex}
+.form{display:flex;flex-direction:column;gap:10px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fl{font-size:18px;font-weight:700;color:var(--p-ink2)}
+.fi{width:100%;height:52px;border:2px solid var(--p-line);border-radius:16px;background:#fff;font-family:inherit;font-size:21px;padding:0 14px;color:var(--p-ink)}
+.fi:focus-visible{outline:3px solid var(--p-blue);outline-offset:2px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1 1 0;min-width:72px;min-height:48px;border:2px solid var(--p-line);background:#fff;border-radius:14px;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 8px;color:var(--p-ink)!important}
+.seg button .ico{font-size:22px}
+.seg button[aria-pressed="true"]{background:var(--p-blue);border-color:var(--p-blue);color:#fff!important}
+.seg.col{flex-direction:column}
+.cnt{font-size:18px;font-weight:700;padding:8px 14px;border-radius:12px;background:var(--p-green-soft);color:var(--p-green-dark)}
+.cnt.bad{background:var(--p-clay-soft);color:var(--p-clay)}
+.err{min-height:22px;font-size:18px;font-weight:700;color:var(--p-clay)}
+.fbtns{display:flex;flex-direction:column;gap:10px}
+
+/* tighter home and detail, sticky save bar */
+.greet{font-size:30px}
+.hello{gap:12px}
+.hello .sun{flex:0 0 48px;height:48px;font-size:30px}
+.mrow{min-height:64px;padding:7px 14px}
+.hero{gap:8px;padding:14px 16px}
+.hero .hart{flex:0 0 80px;height:80px}
+.hero .hart svg{width:66px;height:66px}
+.facts div{padding:6px 12px}
+.facts .k{flex:0 0 104px}
+.acard .abody{padding:10px 14px}
+.back{min-height:40px;padding:4px 0}
+.scr.tall{padding-bottom:0}
+.scr.tall>*:last-child{margin-bottom:28px}
+.scr.tall>.form{margin-bottom:0}
+.fbtns{position:sticky;bottom:0;background:var(--p-bg);padding:8px 0 30px;margin-top:2px;z-index:2}
+.medtag{white-space:nowrap}
+.hero .medtag,.mch .medtag{font-size:19px;padding-right:12px}
+[dir=rtl] .hero .medtag,[dir=rtl] .mch .medtag{padding:4px 4px 4px 12px}
+.hero .medtag b,.mch .medtag b{flex-basis:30px;height:30px;font-size:19px}
+.seg.types{display:grid;grid-template-columns:1fr 1fr}
+.mrow .mt small{overflow-wrap:anywhere}
+.mch{flex-wrap:wrap}
+.mc,.waitc,.note{min-width:0}
+.mcl span,.waitc span{min-width:0;overflow-wrap:anywhere}
+/* facilitator panel */
+.fac{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:12px 14px;margin:0 0 14px;max-width:min(437px,100%);display:flex;flex-direction:column;gap:10px;font-size:14px}
+.fac .frow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fac h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+.fclock{font-variant-numeric:tabular-nums;font-size:24px;font-weight:700;margin-inline-end:6px}
+.fac label{color:var(--muted)}
+.fnote{color:var(--muted);margin:0;min-width:0}
+.flog{max-height:132px;overflow:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;border-top:1px solid var(--edge);padding-top:8px;min-width:0}
+.flog div{display:flex;gap:8px;margin-bottom:2px}
+.flog b{flex:0 0 62px;color:var(--fg)}
+.flog span{min-width:0;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <pattern id="zp" width="56" height="56" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="14" y="14" width="28" height="28"/><rect x="14" y="14" width="28" height="28" transform="rotate(45 28 28)"/><circle cx="28" cy="28" r="5"/></g></pattern>
+</defs></svg>
+
+<h1 class="pg">FEKERNI interface</h1>
+<p class="lead">The working app for Nora's phone and Karim's phone, shown on an iPhone, with a simulated clock that follows the SRD timings. Karim sets the medicines, times and the waiting time between them. The greyscale prototype is still the one you submit and test.</p>
+
+<div class="layout" id="layout">
+  <section class="stage" aria-label="Interface preview">
+    <div class="fac" id="fac" aria-label="Facilitator panel">
+      <h2>Facilitator panel</h2>
+      <div class="frow"><span class="fclock" id="fclock">07:50:00</span>
+        <label for="spd">Speed</label><select class="sel" id="spd"><option value="1">1x (real time)</option><option value="10" selected>10x</option><option value="60">60x</option><option value="300">300x</option></select>
+        <button class="chip" id="pp" type="button">Pause</button><button class="chip" id="sk30" type="button">+30 s</button><button class="chip" id="skw" type="button">Skip the waiting time</button><button class="chip" id="rst" type="button">Restart day</button></div>
+      <div class="frow"><button class="chip" id="who_n" type="button" aria-pressed="true">Nora's phone</button><button class="chip" id="who_k" type="button" aria-pressed="false">Karim's phone</button></div>
+      <div class="frow"><label for="rtask">Task</label><select class="sel" id="rtask"><option value="p1">Patient: one medicine</option><option value="p2">Patient: two medicines</option><option value="c1">Caregiver: urgent alert</option></select><button class="chip" id="rbtn" type="button">Start task</button><button class="chip" id="rcopy" type="button">Copy log</button></div>
+      <p class="fnote" id="rstat" role="status"></p>
+      <div class="flog" id="flog" aria-label="Event log"></div>
+    </div>
+    <div class="jump" id="jump"></div>
+    <div id="box"><div class="scaler" id="scaler">
+      <div class="device"><div class="iphone" id="phone">
+        <i class="btn-side bl1"></i><i class="btn-side bl2"></i><i class="btn-side bl3"></i><i class="btn-side br1"></i>
+        <div class="bezel"><div class="screen" id="appscreen">
+          <div class="island"></div>
+          <div class="sbar" aria-hidden="true"><span id="sbTime">08:00</span>
+            <span class="ic">
+              <svg width="19" height="12" viewBox="0 0 19 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1.1-1.2A10.4 10.4 0 0 0 8.5.6C5.8.6 3.3 1.6 1.4 3.5l1.1 1.2a8.7 8.7 0 0 1 6-2.4zm0 3.5c1.3 0 2.5.5 3.4 1.3l1.1-1.2a7 7 0 0 0-9 0l1.1 1.2c.9-.8 2.1-1.3 3.4-1.3zm0 3.4c-.6 0-1.1.2-1.5.6L8.5 11l1.5-1.2c-.4-.4-.9-.6-1.5-.6z"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="#000" opacity=".4"/><rect x="2" y="2" width="19" height="9" rx="2.2"/><path d="M24 4.5v4c.8-.3 1.5-1.1 1.5-2s-.7-1.7-1.5-2z" opacity=".5"/></svg>
+            </span></div>
+          <div class="scr" id="screen"></div>
+          <div class="home-ind"></div>
+        </div></div>
+      </div></div>
+    </div></div>
+  </section>
+
+  <aside class="notes" aria-label="Design decisions">
+    <h2>What the usability review changed</h2>
+    <h3>Waiting time between the medicines</h3>
+    <ul>
+      <li><b>One setting, in Karim's hands.</b> Medicines and times, Medicine 2, "After Medicine 1 is confirmed", waiting time in minutes (1 to 600). The app has no medical default. 30 minutes is a sample so the demo can run.</li>
+      <li><b>The clock starts at Nora's Done.</b> Medicine 2 is not reminded before that time. If Medicine 1 is never confirmed, Medicine 2 never starts and Karim is alerted.</li>
+      <li><b>Nora sees what to do next.</b> A card says "Wait until 08:31", counts down the minutes and says "Nothing to do now. Your phone will remind you."</li>
+    </ul>
+    <h3>Telling the medicines apart</h3>
+    <ul>
+      <li>Every medicine screen shows a numbered tag ("Medicine 2 of 2"), the name in large type, the type in words (Tablet, Capsule, Cream, Other) and the dosage. Colour and the picture only add to the words.</li>
+      <li>The reminder also shows Karim's instruction and what the medicine is for. Karim cannot save a reminder over 15 words (SRD N.F.R.2 A.C.3), and a live counter shows how many are left.</li>
+      <li>Sample names are First medicine (a tablet) and Second medicine (a cream), and in Darija الدوا الأول and الدوا التاني. Names, dosage, instructions and purpose are what Karim types. Sample text is marked as sample until he saves.</li>
+    </ul>
+    <h3>Video and testing</h3>
+    <ul>
+      <li>The app has no recorder and must not have one (PRD excludes audio and video). The panel above logs the task and ends by itself when Nora taps Done or Help, or Karim acknowledges. There is no minimum length.</li>
+    </ul>
+    <h3>For Nora</h3>
+    <ul>
+      <li>One thing per screen. Done is large and green. Help is outlined in clay. Both carry an icon and a word.</li>
+      <li>Reading text from 25 px up (SRD minimum 18 pt, about 24 px). Buttons are 86 to 104 px tall.</li>
+      <li>The follow-up asks "Have you taken it?" ("used" for a cream) and never tells Nora to take it again.</li>
+    </ul>
+    <h3>For Karim</h3>
+    <ul>
+      <li>Urgency is a word, an icon, a filled bar and a thicker border. Alerts name the medicine and its number, so Medicine 1 and 2 are not mixed up.</li>
+      <li>If he does not acknowledge within 2 minutes, a call banner appears and the log records the call.</li>
+      <li>The app cannot give medical advice. It points to Nora or her healthcare professional.</li>
+    </ul>
+    <h3>Measured contrast</h3>
+    <ul>
+      <li>Body text on the screen background 15.7 to 1, secondary text 8.5 to 1</li>
+      <li>White on the green Done button 5.4 to 1, clay Help label on white 6.2 to 1</li>
+      <li>Component borders 4.1 to 1 (WCAG asks for 3 to 1)</li>
+    </ul>
+    <h3>Notes for building</h3>
+    <ul>
+      <li>The clock is simulated. Timing follows the SRD: follow-ups at 30 s and every 30 s, urgent alert at 3:00, Help alert at once, call after 2 minutes. 1x is real time. Use 1x for sessions.</li>
+      <li>The caregiver's entries stay in this browser only. A real build stores them with the account and requires an authorised person to verify them.</li>
+      <li>The third language is Moroccan Darija in Arabic script. Have a Moroccan speaker check the words before any session.</li>
+    </ul>
+  </aside>
+</div>
+
+<script>
+var ICON={
+ check:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+ phone:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>',
+ bell:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>',
+ back:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>',
+ warn:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+ info:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>',
+ clock:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>',
+ shield:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1.2 15.2L6.6 12l1.4-1.4 2.8 2.8 5.2-5.2L17.4 9.6l-6.6 6.6z"/></svg>',
+ sun:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M12 2.5v2.3M12 19.2v2.3M2.5 12h2.3M19.2 12h2.3M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg>',
+ moon:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>',
+ tablet:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><ellipse cx="12" cy="9" rx="8.4" ry="4.6"/><path d="M3.6 9v5.2c0 2.6 3.8 4.8 8.4 4.8s8.4-2.2 8.4-4.8V9"/><path d="M8 8.2c1-.7 2.3-1 3.6-1"/></g></svg>',
+ capsule:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-45 12 12)"><rect x="2.2" y="7.2" width="19.6" height="9.6" rx="4.8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7.2v9.6" stroke="currentColor" stroke-width="2.4" fill="none"/></g></svg>',
+ life:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.6"/><path d="M14.6 9.4l3.4-3.4M9.4 14.6 6 18M9.4 9.4 6 6M14.6 14.6 18 18"/></g></svg>',
+ user:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm0 2.2c-3.6 0-9 1.8-9 5.4V21h18v-1.4c0-3.6-5.4-5.4-9-5.4z"/></svg>'
+};
+ICON.gear='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg>';
+ICON.tube='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-35 12 12)" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="6" y="8" width="13" height="8" rx="2.4"/><rect x="2.4" y="9.6" width="3.6" height="4.8" rx="1.2"/><path d="M19 9.4v5.2"/></g></svg>';
+ICON.bottle='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="9" width="12" height="12" rx="3"/><rect x="8" y="3.5" width="8" height="5.5" rx="1.6"/><path d="M12 12.5v5M9.5 15h5"/></g></svg>';
+function typeIcon(ty){return ty==="tablet"?ICON.tablet:ty==="capsule"?ICON.capsule:ty==="cream"?ICON.tube:ICON.bottle}
+function logo(){return '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="#2340B8"/><g fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"><rect x="11.5" y="11.5" width="17" height="17"/><rect x="11.5" y="11.5" width="17" height="17" transform="rotate(45 20 20)"/></g><circle cx="20" cy="20" r="3.2" fill="#FFE7A8"/></svg>'}
+function zl(){return '<svg class="zl" aria-hidden="true"><rect width="100%" height="100%" fill="url(#zp)"/></svg>'}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+
+/* ---------- pictures: colour follows the position (1 blue, 2 orange), shape follows the type ---------- */
+function art(i){
+ var type=CFG.meds[i].type,c=i===0?{m:"#2340B8",d:"#16297C"}:{m:"#D97706",d:"#9A4F00"};
+ var disc=function(cx,cy,r,w){return '<g><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fff" stroke="'+c.m+'" stroke-width="'+w+'"/><path d="M'+(cx-r*0.55)+' '+(cy-r*0.15)+'q'+(r*0.15)+' -'+(r*0.5)+' '+(r*0.6)+' -'+(r*0.2)+'" fill="none" stroke="'+c.m+'" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/></g>'};
+ var caps=function(cx,cy,w,h,rot){return '<g transform="rotate('+rot+' '+cx+' '+cy+')"><rect x="'+(cx-w/2)+'" y="'+(cy-h/2)+'" width="'+w+'" height="'+h+'" rx="'+(h/2)+'" fill="#fff"/><path d="M'+cx+' '+(cy-h/2)+'h-'+(w/2-h/2)+'a'+(h/2)+' '+(h/2)+' 0 0 0 0 '+h+'h'+(w/2-h/2)+'z" fill="'+c.m+'"/><rect x="'+(cx-w/2)+'" y="'+(cy-h/2)+'" width="'+w+'" height="'+h+'" rx="'+(h/2)+'" fill="none" stroke="'+c.d+'" stroke-width="3"/></g>'};
+ var base='<ellipse cx="150" cy="176" rx="120" ry="9" fill="#10193A" opacity=".12"/><path d="M40 70l10-10m-10 0 10 10" stroke="'+c.m+'" stroke-width="3" stroke-linecap="round" opacity=".5"/><path d="M262 54l8-8m-8 0 8 8" stroke="'+c.m+'" stroke-width="3" stroke-linecap="round" opacity=".5"/>';
+ var bottle='<rect x="104" y="58" width="92" height="116" rx="18" fill="#fff" stroke="'+c.d+'" stroke-width="3"/><rect x="104" y="96" width="92" height="64" fill="'+c.m+'"/><rect x="104" y="58" width="92" height="116" rx="18" fill="none" stroke="'+c.d+'" stroke-width="3"/><rect x="108" y="30" width="84" height="34" rx="10" fill="'+c.d+'"/><path d="M118 38v20M130 38v20M142 38v20M154 38v20M166 38v20M178 38v20" stroke="#fff" stroke-opacity=".25" stroke-width="3"/><rect x="136" y="114" width="28" height="28" rx="7" fill="#fff"/><path d="M150 120v16M142 128h16" stroke="'+c.m+'" stroke-width="5" stroke-linecap="round"/>';
+ var scene,label;
+ if(type==="cream"){
+  label='A tube of cream';
+  scene='<g transform="rotate(-14 150 104)"><rect x="70" y="72" width="176" height="60" rx="16" fill="#fff" stroke="'+c.d+'" stroke-width="3"/><rect x="118" y="72" width="78" height="60" fill="'+c.m+'"/><rect x="70" y="72" width="176" height="60" rx="16" fill="none" stroke="'+c.d+'" stroke-width="3"/><rect x="240" y="80" width="18" height="44" rx="3" fill="'+c.d+'"/><path d="M246 82v40M252 82v40" stroke="#fff" stroke-opacity=".3" stroke-width="2"/><rect x="40" y="82" width="34" height="40" rx="7" fill="'+c.d+'"/><rect x="26" y="94" width="16" height="16" rx="4" fill="'+c.d+'"/><path d="M157 90v24M145 102h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/></g><g><ellipse cx="236" cy="162" rx="30" ry="10" fill="#fff" stroke="'+c.d+'" stroke-width="3"/><ellipse cx="236" cy="150" rx="23" ry="9" fill="#fff" stroke="'+c.d+'" stroke-width="3"/><ellipse cx="236" cy="139" rx="15" ry="8" fill="#fff" stroke="'+c.d+'" stroke-width="3"/><path d="M236 127l-5 9h10z" fill="#fff" stroke="'+c.d+'" stroke-width="2.5" stroke-linejoin="round"/></g>';
+ } else if(type==="capsule"){
+  label='A bottle with capsules';
+  scene=bottle+caps(236,148,60,28,-28)+caps(258,112,44,20,24)+caps(52,158,52,24,-12);
+ } else if(type==="tablet"){
+  label='A bottle with round tablets';
+  scene=bottle+disc(238,150,21,5)+disc(262,118,14,4)+disc(52,160,15,4);
+ } else {
+  label='A medicine bottle';
+  scene=bottle;
+ }
+ return '<svg class="pic" viewBox="0 0 300 190" role="img" aria-label="'+label+'">'+base+scene+'</svg>';
+}
+
+/* ---------- words ---------- */
+var T={
+en:{greet:"Good morning, Nora.",greetA:"Good afternoon, Nora.",greetE:"Good evening, Nora.",today:"Today",now:"Now",later:"Later",nextLbl:"Next",waitLbl:"Wait",
+ medOf:"Medicine {n} of {N}",t_tablet:"Tablet",t_capsule:"Capsule",t_cream:"Cream",t_other:"Other",m1:"First medicine",m2:"Second medicine",
+ d1:"1 tablet",d2:"As prescribed",i_tablet:"Take it as your doctor said.",i_capsule:"Take it as your doctor said.",i_cream:"Apply it as your doctor said.",i_other:"Use it as your doctor said.",p1:"It helps your treatment.",p2:"For your skin.",
+ band:"{t} · Medication",again:"Reminder again · {t}",askT:"Have you taken it?",askU:"Have you used it?",f3:"Not sure? Tap Help.",
+ done:"Done",help:"Help",helpAsked:"Help asked",h1:"You asked for help.",h2:"Your contact has been told.",
+ well:"Well done, Nora.",all:"All done. Have a good day, Nora.",allSub:"Both medicines are marked done.",hint:"Your phone will remind you at the right time.",
+ atT:"At {t}",waitUntil:"Wait until {t}",inMin:"In {n} min",inLess:"In less than 1 min",nothing:"Nothing to do now. Your phone will remind you.",contact:"Karim",
+ alerts:"Alerts",watching:"Looking after Nora",isNew:"New",handled:"Handled",acked:"Acknowledged",normal:"Normal",urgent:"Urgent",none:"No new alerts. Nora's medicines are on schedule.",medsBtn:"Medicines and times",
+ mN:"Nora did not confirm her scheduled medication, {m}. Reminder at {t}.",mU:"Nora asked for help at her {t} reminder for {m}.",
+ o1:"Nora did not confirm: water the plants. Reminder at 18:40.",o1t:"Yesterday",o2:"Nora asked for help at her 08:00 medication reminder.",o2t:"Mon 08:05",
+ sN:"Nora has not confirmed her medication.",sU:"Nora asked for help.",fMed:"Medicine",fRem:"Reminders",fRemV:"{t} · {n} sent",fConf:"Confirmation",fConfN:"Not confirmed yet",fConfD:"Done at {t}",fAl:"Your alert",fAlS:"Sent {t}",fAlA:"Sent {t} · seen {a}",
+ fNext:"Next medicine",fNextAfter:"{name} waits {w} min after this is done",fNextAt:"{name} at {t}",fNextNone:"None",
+ ackNote:"Acknowledge within 2 minutes, or the app will call you.",called:"The app is calling you now.",safe:"The app cannot give medical advice. Contact Nora or her healthcare professional.",ack:"Acknowledge",ackd:"Acknowledged",
+ a1:"Acknowledged",a2:"You acknowledged this alert at {t}.",a4:"Not confirmed yet",a5:"You will be told if Nora answers.",a4d:"Nora tapped Done at {t}",a5d:"Nora answered after your alert.",back:"Back to alerts",
+ sTitle:"Medicines",sNote:"Enter names, times and instructions from the prescription or the doctor. The app does not suggest medicines, doses or waiting times.",sSample:"These are sample entries. Replace them with the real prescription.",
+ sAtT:"At {t}",sAfter:"{w} min after Medicine 1 is confirmed",sWaitT:"Waiting time between the medicines",sWaitV:"{w} minutes",sWaitHow:"Nora sees Medicine 2 only after this time has passed.",sWaitNo:"Medicine 2 has its own set time.",edit:"Edit",
+ fName:"Name",fType:"Type",fOther:"Write the type",fDose:"Dosage (from the prescription)",fInstr:"Instruction for Nora",fPurp:"What it is for",fWhen:"When",wTime:"At a set time",wAfter:"After Medicine 1 is confirmed",fWait:"Waiting time in minutes",
+ cnt:"Reminder length: {n} of 15 words",save:"Save",cancel:"Cancel",eLong:"Too long. Shorten the instruction or purpose.",eName:"Enter a name.",eWait:"Enter minutes from 1 to 600.",eTime:"Enter a time."},
+fr:{greet:"Bonjour, Nora.",greetA:"Bon après-midi, Nora.",greetE:"Bonsoir, Nora.",today:"Aujourd'hui",now:"Maintenant",later:"Plus tard",nextLbl:"Suivant",waitLbl:"Attendre",
+ medOf:"Médicament {n} sur {N}",t_tablet:"Comprimé",t_capsule:"Gélule",t_cream:"Crème",t_other:"Autre",m1:"Premier médicament",m2:"Deuxième médicament",
+ d1:"1 comprimé",d2:"Comme prescrit",i_tablet:"Prenez-le comme votre médecin l'a dit.",i_capsule:"Prenez-la comme votre médecin l'a dit.",i_cream:"Appliquez-la comme votre médecin l'a dit.",i_other:"Utilisez-le comme votre médecin l'a dit.",p1:"Cela aide votre traitement.",p2:"Pour votre peau.",
+ band:"{t} · Médicament",again:"Nouveau rappel · {t}",askT:"L'avez-vous pris ?",askU:"L'avez-vous utilisé ?",f3:"Pas sûre ? Touchez Aide.",
+ done:"Fait",help:"Aide",helpAsked:"Aide demandée",h1:"Vous avez demandé de l'aide.",h2:"Votre contact a été prévenu.",
+ well:"Bravo, Nora.",all:"Tout est fait. Bonne journée, Nora.",allSub:"Les deux médicaments sont faits.",hint:"Votre téléphone vous le rappellera au bon moment.",
+ atT:"À {t}",waitUntil:"Attendez jusqu'à {t}",inMin:"Dans {n} min",inLess:"Dans moins d'1 min",nothing:"Rien à faire maintenant. Votre téléphone vous préviendra.",contact:"Karim",
+ alerts:"Alertes",watching:"Suivi de Nora",isNew:"Nouveau",handled:"Traité",acked:"Pris en compte",normal:"Normal",urgent:"Urgent",none:"Aucune nouvelle alerte. Les médicaments de Nora sont à jour.",medsBtn:"Médicaments et horaires",
+ mN:"Nora n'a pas confirmé son médicament prévu, {m}. Rappel à {t}.",mU:"Nora a demandé de l'aide à son rappel de {t} pour {m}.",
+ o1:"Nora n'a pas confirmé : arroser les plantes. Rappel à 18:40.",o1t:"Hier",o2:"Nora a demandé de l'aide à son rappel de médicament de 08:00.",o2t:"Lun 08:05",
+ sN:"Nora n'a pas confirmé son médicament.",sU:"Nora a demandé de l'aide.",fMed:"Médicament",fRem:"Rappels",fRemV:"{t} · {n} envoyés",fConf:"Confirmation",fConfN:"Pas encore confirmée",fConfD:"Fait à {t}",fAl:"Votre alerte",fAlS:"Envoyée {t}",fAlA:"Envoyée {t} · vue {a}",
+ fNext:"Médicament suivant",fNextAfter:"{name} attend {w} min après",fNextAt:"{name} à {t}",fNextNone:"Aucun",
+ ackNote:"Confirmez dans les 2 minutes, sinon l'application vous appellera.",called:"L'application vous appelle maintenant.",safe:"L'application ne donne pas de conseil médical. Contactez Nora ou son professionnel de santé.",ack:"Confirmer",ackd:"Confirmé",
+ a1:"Pris en compte",a2:"Vous avez confirmé cette alerte à {t}.",a4:"Pas encore confirmée",a5:"Vous serez prévenu si Nora répond.",a4d:"Nora a appuyé sur Fait à {t}",a5d:"Nora a répondu après votre alerte.",back:"Retour aux alertes",
+ sTitle:"Médicaments",sNote:"Saisissez noms, horaires et consignes d'après l'ordonnance ou le médecin. L'application ne propose ni médicament, ni dose, ni délai.",sSample:"Ce sont des exemples. Remplacez-les par la vraie ordonnance.",
+ sAtT:"À {t}",sAfter:"{w} min après la confirmation du médicament 1",sWaitT:"Délai entre les médicaments",sWaitV:"{w} minutes",sWaitHow:"Nora ne voit le médicament 2 qu'après ce délai.",sWaitNo:"Le médicament 2 a son horaire fixe.",edit:"Modifier",
+ fName:"Nom",fType:"Type",fOther:"Écrivez le type",fDose:"Dosage (selon l'ordonnance)",fInstr:"Consigne pour Nora",fPurp:"À quoi il sert",fWhen:"Quand",wTime:"À une heure fixe",wAfter:"Après la confirmation du médicament 1",fWait:"Délai en minutes",
+ cnt:"Longueur du rappel : {n} mots sur 15",save:"Enregistrer",cancel:"Annuler",eLong:"Trop long. Raccourcissez la consigne ou l'usage.",eName:"Saisissez un nom.",eWait:"Saisissez de 1 à 600 minutes.",eTime:"Saisissez une heure."},
+ma:{greet:"صباح الخير نورا.",greetA:"نهار مبارك نورا.",greetE:"مساء الخير نورا.",today:"اليوم",now:"دابا",later:"من بعد",nextLbl:"الجاي",waitLbl:"تسناي",
+ medOf:"الدوا {n} من {N}",t_tablet:"حبة",t_capsule:"كبسولة",t_cream:"كريم",t_other:"آخر",m1:"الدوا الأول",m2:"الدوا التاني",
+ d1:"حبة وحدة",d2:"بحال الوصفة",i_tablet:"خديه بحال ما قال ليك الطبيب.",i_capsule:"خديه بحال ما قال ليك الطبيب.",i_cream:"حطيه بحال ما قال ليك الطبيب.",i_other:"استعمليه بحال ما قال ليك الطبيب.",p1:"كيعاون فالعلاج ديالك.",p2:"للجلد ديالك.",
+ band:"{t} · الدوا",again:"تذكير تاني · {t}",askT:"واش خديتي الدوا؟",askU:"واش استعملتيه؟",f3:"ما متأكدةش؟ ضغطي على عاوني.",
+ done:"سالا",help:"عاوني",helpAsked:"طلبتي المساعدة",h1:"طلبتي المساعدة.",h2:"صيفطنا الخبر لكريم.",
+ well:"برافو نورا.",all:"سالا كلشي. نهار مبارك نورا.",allSub:"الدواين تسجلو.",hint:"التيليفون غادي يفكرك فالوقت المناسب.",
+ atT:"فـ {t}",waitUntil:"تسناي حتى لـ {t}",inMin:"من بعد {n} دقيقة",inLess:"من بعد أقل من دقيقة",nothing:"ما كاين ما تدير دابا. التيليفون غادي يفكرك.",contact:"كريم",
+ alerts:"التنبيهات",watching:"متابعة نورا",isNew:"جديد",handled:"تعالج",acked:"شفتيه",normal:"عادي",urgent:"مستعجل",none:"ما كاين حتى تنبيه جديد. الدوا ديال نورا ماشي مزيان.",medsBtn:"الدوا والأوقات",
+ mN:"نورا ما أكدات الدوا ديالها، {m}. التذكير كان فـ {t}.",mU:"نورا طلبات المساعدة فتذكير {t} ديال {m}.",
+ o1:"نورا ما أكدات: سقي النبات. التذكير كان فـ 18:40.",o1t:"البارح",o2:"نورا طلبات المساعدة فتذكير الدوا ديال 08:00.",o2t:"الإتنين 08:05",
+ sN:"نورا باقي ما أكدات الدوا ديالها.",sU:"نورا طلبات المساعدة.",fMed:"الدوا",fRem:"التذكيرات",fRemV:"{t} · {n} تصيفطو",fConf:"التأكيد",fConfN:"باقي ما تأكدات",fConfD:"سالات فـ {t}",fAl:"التنبيه ديالك",fAlS:"تصيفط فـ {t}",fAlA:"تصيفط فـ {t} · شفتيه فـ {a}",
+ fNext:"الدوا الجاي",fNextAfter:"{name} كيتسنى {w} دقيقة من بعد",fNextAt:"{name} فـ {t}",fNextNone:"والو",
+ ackNote:"شوف التنبيه فأقل من دقيقتين، وإلا التطبيق غادي يعيط ليك.",called:"التطبيق كيعيط ليك دابا.",safe:"التطبيق ما كيعطيش نصيحة طبية. تواصل مع نورا ولا مع الطبيب ديالها.",ack:"شفت التنبيه",ackd:"شفتي التنبيه",
+ a1:"شفتي التنبيه",a2:"شفتي هاد التنبيه فـ {t}.",a4:"باقي ما تأكدات",a5:"غادي نعلموك إلا جاوبات نورا.",a4d:"نورا ضغطات على سالا فـ {t}",a5d:"نورا جاوبات من بعد التنبيه.",back:"رجع للتنبيهات",
+ sTitle:"الدوا",sNote:"كتب الأسماء والأوقات والتعليمات من الوصفة ولا من عند الطبيب. التطبيق ما كيقترحش دوا ولا جرعة ولا وقت تسناء.",sSample:"هادو أمثلة. بدلهم بالوصفة الحقيقية.",
+ sAtT:"فـ {t}",sAfter:"{w} دقيقة من بعد ما يتأكد الدوا 1",sWaitT:"وقت التسناء بين الدواين",sWaitV:"{w} دقيقة",sWaitHow:"نورا كتشوف الدوا 2 غير من بعد هاد الوقت.",sWaitNo:"الدوا 2 عندو وقت محدد.",edit:"بدل",
+ fName:"الاسم",fType:"النوع",fOther:"كتب النوع",fDose:"الجرعة (من الوصفة)",fInstr:"تعليمات لنورا",fPurp:"علاش كيتاخد",fWhen:"فوقتاش",wTime:"فوقت محدد",wAfter:"من بعد ما يتأكد الدوا 1",fWait:"وقت التسناء بالدقايق",
+ cnt:"طول التذكير: {n} من 15 كلمة",save:"سجل",cancel:"إلغاء",eLong:"طويل بزاف. قصر التعليمات ولا السبب.",eName:"كتب اسم.",eWait:"كتب دقايق من 1 حتى 600.",eTime:"كتب وقت."}
+};
+var lang="en",$=function(i){return document.getElementById(i)};
+function t(){return T[lang]}
+function fill(s,o){return s.replace(/\{(\w+)\}/g,function(_,k){return o[k]})}
+function pad(n){return (n<10?"0":"")+n}
+function hm(s){return pad(Math.floor(s/3600)%24)+":"+pad(Math.floor(s/60)%60)}
+function hms(s){return hm(s)+":"+pad(s%60)}
+function pt(str){var a=String(str||"08:00").split(":");return (+a[0]||0)*3600+(+a[1]||0)*60}
+function now(){return performance.now()/1000}
+function mmss(sec){sec=Math.max(0,Math.round(sec));return Math.floor(sec/60)+":"+pad(sec%60)}
+
+/* ---------- what the caregiver entered ---------- */
+var CKEY="fekerni-medcfg-v2",CFG;
+function defCfg(){return {meds:[
+ {name:"",type:"tablet",other:"",dosage:"",instr:"",purpose:"",rule:"time",time:"08:00",wait:30,saved:false},
+ {name:"",type:"cream",other:"",dosage:"",instr:"",purpose:"",rule:"after",time:"08:30",wait:30,saved:false}]}}
+function loadCfg(){try{var s=localStorage.getItem(CKEY);if(s){var o=JSON.parse(s);if(o&&o.meds&&o.meds.length===2)return o}}catch(e){}return defCfg()}
+function storeCfg(){try{localStorage.setItem(CKEY,JSON.stringify(CFG))}catch(e){}}
+function typeLabelOf(type,other){return type==="other"?((other||"").trim()||t().t_other):t()["t_"+type]}
+function typeLabel(i){var m=CFG.meds[i];return typeLabelOf(m.type,m.other)}
+function eff(i,k){var m=CFG.meds[i],x=t(),v=(m[k]||"").trim();
+ if(v||m.saved)return v;
+ if(k==="name")return x["m"+(i+1)];
+ if(k==="dosage")return x["d"+(i+1)];
+ if(k==="instr")return x["i_"+m.type];
+ if(k==="purpose")return x["p"+(i+1)];
+ return v}
+function wc(s){s=(s||"").trim();return s?s.split(/\s+/).length:0}
+function remWords(name,tl,dose,instr,purp){return wc(name)+wc(tl)+wc(dose)+wc(instr)+wc(purp)}
+function curWords(i){return remWords(eff(i,"name"),typeLabel(i),eff(i,"dosage"),eff(i,"instr"),eff(i,"purpose"))}
+function medDesc(i){return eff(i,"name")+" ("+fill(t().medOf,{n:i+1,N:2})+")"}
+
+/* ---------- the engine: a virtual clock that runs the SRD rules ---------- */
+var FU_FIRST=30,FU_EVERY=30,FU_MAX=5,ESC_AT=180,CALL_AFTER=120;
+var ENG={T:0,D:[],A:[],nid:1,log:[],speed:10,running:true,acc:0,who:"nora"};
+var CS={s:"alerts",sel:null,form:null};
+var REC=null,lastSig="";
+function newDose(){return {st:"upcoming",startAt:null,fu:0,help:false,helpAt:null,esc:false,tTaken:null,wallStart:null,wallEnd:null}}
+function engReset(T0){ENG.T=T0;ENG.D=[newDose(),newDose()];ENG.A=[];ENG.nid=1;ENG.log=[];ENG.acc=0}
+function lg(txt){ENG.log.push({sim:ENG.T,wall:now(),txt:txt})}
+function dueAt(i){var m=CFG.meds[i];
+ if(i===0||m.rule==="time")return pt(m.time);
+ var p=ENG.D[i-1];return p.st==="taken"?p.tTaken+(+m.wait)*60:null}
+function addAlert(i,cause){var d=ENG.D[i];
+ ENG.A.push({id:ENG.nid++,med:i,cause:cause,at:ENG.T,nSent:1+d.fu,startAt:d.startAt,ack:false,ackAt:null,called:false,callAt:null,noraDoneAt:null});
+ lg("URGENT alert sent to Karim ("+(cause==="help"?"Nora tapped Help":"no answer after 3 minutes")+", Medicine "+(i+1)+")")}
+function step(){var e=ENG;e.T++;
+ for(var i=0;i<2;i++){var d=e.D[i];
+  if(d.st==="upcoming"){var du=dueAt(i);if(du!==null&&e.T>=du){d.st="reminding";d.startAt=e.T;d.wallStart=now();lg("Reminder shown: Medicine "+(i+1)+", "+eff(i,"name"))}}
+  else if(d.st==="reminding"&&!d.help&&!d.esc){
+   var el=e.T-d.startAt;
+   if(d.fu<FU_MAX&&el>=FU_FIRST+FU_EVERY*d.fu){d.fu++;lg("Follow-up "+d.fu+": Medicine "+(i+1))}
+   if(el>=ESC_AT){d.esc=true;addAlert(i,"noresp")}}}
+ e.A.forEach(function(a){if(!a.ack&&!a.called&&e.T-a.at>=CALL_AFTER){a.called=true;a.callAt=e.T;lg("Karim did not acknowledge in 2 minutes: the app called him")}})}
+function adv(n){for(var k=0;k<n;k++)step()}
+function doDone(i){var d=ENG.D[i];if(!d||d.st!=="reminding")return;
+ d.st="taken";d.tTaken=ENG.T;d.wallEnd=now();
+ ENG.A.forEach(function(a){if(a.med===i&&a.noraDoneAt===null)a.noraDoneAt=ENG.T});
+ lg("Nora tapped Done: Medicine "+(i+1)+(ENG.A.some(function(a){return a.med===i})?" (after the alert, Karim is told)":" (follow-ups stop, no alert)"));
+ if(i===0&&CFG.meds[1].rule==="after")lg("Waiting time started: Medicine 2 at "+hm(ENG.T+(+CFG.meds[1].wait)*60));
+ checkRec()}
+function doHelp(i){var d=ENG.D[i];if(!d||d.st!=="reminding"||d.help)return;
+ d.help=true;d.helpAt=ENG.T;d.wallEnd=now();lg("Nora tapped Help: Medicine "+(i+1));addAlert(i,"help");checkRec()}
+function doAck(id){var a=ENG.A.filter(function(x){return x.id===id})[0];if(!a||a.ack)return;a.ack=true;a.ackAt=ENG.T;lg("Karim acknowledged the alert");checkRec()}
+function active(){for(var i=0;i<2;i++)if(ENG.D[i].st==="reminding")return i;return -1}
+function pView(){var i=active();if(i<0)return {s:"home",i:-1};var d=ENG.D[i];return {s:(d.fu>0||d.esc)?"fu":"rem",i:i}}
+
+/* ---------- session recorder: the task decides how long it lasts ---------- */
+function checkRec(){if(!REC||REC.done)return;var D=ENG.D,ok=false,msg="";
+ if(REC.task==="p1"&&(D[0].st==="taken"||D[0].help)){ok=true;msg="Nora "+(D[0].help?"tapped Help":"tapped Done")+" for Medicine 1";REC.resp=D[0].wallEnd-D[0].wallStart}
+ if(REC.task==="p2"&&(D[1].st==="taken"||D[1].help)){ok=true;msg="Nora "+(D[1].help?"tapped Help":"tapped Done")+" for Medicine 2";REC.resp=D[1].wallEnd-D[1].wallStart}
+ if(REC.task==="c1"&&ENG.A.length&&ENG.A[0].ack){ok=true;msg="Karim acknowledged the alert";REC.resp=now()-REC.wall0}
+ if(ok){REC.done=true;REC.t1=now();REC.msg=msg;lg("TASK COMPLETE: "+msg)}}
+
+/* ---------- patient screens ---------- */
+function medtag(i){return '<span class="medtag m'+(i+1)+'"><b>'+(i+1)+'</b>'+fill(t().medOf,{n:i+1,N:2})+'</span>'}
+function tgs(i){var dose=eff(i,"dosage");return '<div class="tgs"><span class="tg typ">'+typeIcon(CFG.meds[i].type)+esc(typeLabel(i))+'</span>'+(dose?'<span class="tg">'+esc(dose)+'</span>':'')+'</div>'}
+function greetTxt(){var h=Math.floor(ENG.T/3600)%24,x=t();return h<12?x.greet:h<18?x.greetA:x.greetE}
+function heroCard(i,kind){var x=t(),du=dueAt(i),left=du===null?0:du-ENG.T;
+ var a=art(i).replace('class="pic"','class="pic" style="max-width:none"');
+ var head='<div class="hrow"><span class="hart">'+a+'</span><span class="ht">'+medtag(i)+'<span class="hn">'+esc(eff(i,"name"))+'</span></span></div>';
+ var rest;
+ if(kind==="wait"){var mins=Math.ceil(left/60);
+  rest='<span class="big">'+ICON.clock+fill(x.waitUntil,{t:hm(du)})+'</span><span class="hs">'+(mins<1?x.inLess:fill(x.inMin,{n:mins}))+'</span><span class="hs2">'+x.nothing+'</span>'}
+ else rest='<span class="big sm">'+ICON.clock+fill(x.atT,{t:hm(du)})+'</span>';
+ return '<div class="hero'+(i===1?' m2':'')+'">'+zl()+head+rest+'</div>'}
+var V={
+ home:function(){var x=t(),D=ENG.D,m=CFG.meds;
+  var nextI=D[0].st==="upcoming"?0:(D[1].st==="upcoming"?1:-1);
+  function row(i){var d=D[i],du=dueAt(i),cls="mrow",tick="";
+   var sub=fill(x.medOf,{n:i+1,N:2})+" · "+esc(typeLabel(i));
+   var tmv=d.st==="taken"?hm(d.startAt):(du!==null?hm(du):x.later);
+   if(d.st==="taken"){cls+=" dn";tick='<span class="tick">'+ICON.check+'</span>'}
+   else if(i===nextI)cls+=" nxt"+(i===1?" m2":"");
+   return '<div class="'+cls+'"><span class="mic m'+(i+1)+'">'+typeIcon(m[i].type)+'</span><span class="mt"><b>'+esc(eff(i,"name"))+'</b><small>'+sub+'</small></span><span class="mtime">'+tmv+tick+'</span></div>'}
+  var hero;
+  if(nextI<0)hero='<div class="banner pop"><span class="tick">'+ICON.check+'</span><span><b>'+x.all+'</b><span>'+x.allSub+'</span></span></div>';
+  else if(nextI===0)hero=heroCard(0,"next");
+  else hero=heroCard(1,"wait");
+  return '<div class="top"><div class="brand">'+logo()+'<span>fekerni</span></div><div class="contact"><span class="av" aria-hidden="true">K</span>'+x.contact+'</div></div>'+
+   '<div class="hello"><span class="sun">'+((ENG.T>=21600&&ENG.T<64800)?ICON.sun:ICON.moon)+'</span><h1 class="greet">'+greetTxt()+'</h1></div>'+hero+
+   '<div class="sect">'+x.today+'</div><div class="mlist">'+row(0)+row(1)+'</div><div class="spacer"></div>'+(nextI===0?'<p class="hint">'+x.hint+'</p>':'')},
+ rem:function(){var x=t(),i=PV.i,d=ENG.D[i];
+  var instr=eff(i,"instr"),purp=eff(i,"purpose");
+  var body=d.help?helpBody(x,i):'<div class="art m'+(i+1)+'">'+zl()+art(i)+'</div><div class="ptext">'+medtag(i)+'<h1 class="t1">'+esc(eff(i,"name"))+'</h1>'+tgs(i)+(instr?'<p class="t2">'+esc(instr)+'</p>':'')+(purp?'<p class="t3">'+esc(purp)+'</p>':'')+'</div>';
+  return '<div class="band">'+typeIcon(CFG.meds[i].type)+'<span>'+fill(x.band,{t:hm(d.startAt)})+'</span></div>'+body+'<div class="spacer"></div>'+btns(d)},
+ fu:function(){var x=t(),i=PV.i,d=ENG.D[i],ty=CFG.meds[i].type;
+  var body=d.help?helpBody(x,i):'<div class="art m'+(i+1)+'">'+zl()+art(i)+'</div><div class="ptext">'+medtag(i)+'<h1 class="t1">'+esc(eff(i,"name"))+'</h1>'+tgs(i)+'<p class="t2">'+((ty==="tablet"||ty==="capsule")?x.askT:x.askU)+'</p><p class="t3">'+x.f3+'</p></div>';
+  return '<div class="band again">'+ICON.bell+'<span>'+fill(x.again,{t:hm(d.startAt)})+'</span></div>'+body+'<div class="spacer"></div>'+btns(d)},
+ /* ---------- caregiver screens ---------- */
+ alerts:function(){var x=t(),A=ENG.A.slice().reverse();
+  var calling=ENG.A.some(function(a){return a.called&&!a.ack});
+  var cards=A.map(function(a){var txt=fill(a.cause==="help"?x.mU:x.mN,{t:hm(a.startAt),m:esc(medDesc(a.med))});
+   var st=a.noraDoneAt!==null?x.handled:a.ack?x.acked:x.isNew;
+   return '<button class="acard urgent" type="button" data-go="detail" data-sel="'+a.id+'">'+lvl("urgent")+'<div class="abody"><span class="mic">'+typeIcon(CFG.meds[a.med].type)+'</span><div class="tx"><p class="atext">'+txt+'</p><div class="ameta"><span>'+hm(a.at)+'</span><span class="'+(a.ack||a.noraDoneAt!==null?'':'st')+'">'+st+'</span></div></div></div></button>'}).join("");
+  var old='<div class="acard old">'+lvl("normal")+'<div class="abody"><span class="mic">'+ICON.info+'</span><div class="tx"><p class="atext">'+x.o1+'</p><div class="ameta"><span>'+x.o1t+'</span><span>'+x.handled+'</span></div></div></div></div>'+
+   '<div class="acard old urgent">'+lvl("urgent")+'<div class="abody"><span class="mic">'+ICON.tablet+'</span><div class="tx"><p class="atext">'+x.o2+'</p><div class="ameta"><span>'+x.o2t+'</span><span>'+x.handled+'</span></div></div></div></div>';
+  return '<div class="chead"><div class="av" aria-hidden="true">K</div><h2>'+x.alerts+'<small>'+x.watching+'</small></h2><span class="bell" aria-hidden="true">'+ICON.bell+'</span></div>'+
+   (calling?'<div class="note call">'+ICON.phone+'<span>'+x.called+'</span></div>':'')+
+   '<button class="btn-ghost sm" type="button" data-go="meds">'+ICON.gear+'<span>'+x.medsBtn+'</span></button>'+
+   (cards||'<div class="note info">'+ICON.info+'<span>'+x.none+'</span></div>')+old},
+ detail:function(){var x=t(),a=selAlert(),m=a.med,help=a.cause==="help";
+  var conf=a.noraDoneAt!==null?fill(x.fConfD,{t:hm(a.noraDoneAt)}):x.fConfN;
+  var al=a.ack?fill(x.fAlA,{t:hm(a.at),a:hm(a.ackAt)}):fill(x.fAlS,{t:hm(a.at)});
+  var m2=CFG.meds[1],nx=m===0?(m2.rule==="after"?fill(x.fNextAfter,{name:esc(eff(1,"name")),w:m2.wait}):fill(x.fNextAt,{name:esc(eff(1,"name")),t:m2.time})):x.fNextNone;
+  return '<button class="back" type="button" data-go="alerts"><span class="flip">'+ICON.back+'</span>'+x.alerts+'</button>'+
+  '<div class="acard urgent" style="pointer-events:none">'+lvl("urgent")+'<div class="abody"><span class="mic">'+typeIcon(CFG.meds[m].type)+'</span><div class="tx"><p class="sumline">'+(help?x.sU:x.sN)+'</p></div></div></div>'+
+  '<div class="facts"><div><span class="k">'+x.fMed+'</span><span class="v"><i class="dotm'+(m===1?' m2':'')+'"></i><span class="vv"><b>'+esc(eff(m,"name"))+'</b><small>'+fill(x.medOf,{n:m+1,N:2})+' · '+esc(typeLabel(m))+(eff(m,"dosage")?' · '+esc(eff(m,"dosage")):'')+'</small></span></span></div>'+
+  '<div><span class="k">'+x.fRem+'</span><span class="v">'+fill(x.fRemV,{t:hm(a.startAt),n:a.nSent})+'</span></div><div><span class="k">'+x.fConf+'</span><span class="v">'+conf+'</span></div><div><span class="k">'+x.fAl+'</span><span class="v">'+al+'</span></div><div><span class="k">'+x.fNext+'</span><span class="v">'+nx+'</span></div></div>'+
+  (a.ack?'':'<div class="note">'+ICON.clock+'<span>'+x.ackNote+'</span></div>')+
+  '<div class="note info">'+ICON.shield+'<span>'+x.safe+'</span></div><div class="spacer"></div>'+
+  (a.ack?'<button class="btn-ack" type="button" disabled>'+ICON.check+x.ackd+'</button>':'<button class="btn-ack" type="button" data-act="ack">'+ICON.check+x.ack+'</button>');},
+ acked:function(){var x=t(),a=selAlert(),m=a.med;
+  var st=a.noraDoneAt!==null?'<span class="pill g">'+ICON.check+fill(x.a4d,{t:hm(a.noraDoneAt)})+'</span><span>'+x.a5d+'</span>':'<span class="pill">'+ICON.clock+x.a4+'</span><span>'+x.a5+'</span>';
+  return '<div class="okbig g pop">'+ICON.check+'</div><div class="ptext center"><h1 class="t1" style="font-size:38px">'+x.a1+'</h1><p class="t3" style="font-size:23px">'+fill(x.a2,{t:hm(a.ackAt)})+'</p></div>'+
+  '<div class="stbox"><span class="nm"><span class="mic m'+(m+1)+'" style="flex-basis:42px;height:42px;font-size:24px">'+typeIcon(CFG.meds[m].type)+'</span>'+esc(eff(m,"name"))+'</span>'+st+'</div><div class="spacer"></div><button class="btn-ghost" type="button" data-go="alerts">'+x.back+'</button>';},
+ meds:function(){var x=t(),m=CFG.meds,sample=!(m[0].saved&&m[1].saved);
+  function card(i){var when=(i===1&&m[1].rule==="after")?fill(x.sAfter,{w:m[1].wait}):fill(x.sAtT,{t:m[i].time});
+   var instr=eff(i,"instr"),purp=eff(i,"purpose");
+   return '<div class="mc m'+(i+1)+'"><div class="mch">'+medtag(i)+'<button class="edb" type="button" data-edit="'+i+'">'+x.edit+'</button></div><div class="mcn">'+esc(eff(i,"name"))+'</div>'+tgs(i)+
+    '<div class="mcl">'+ICON.clock+'<span>'+when+'</span></div>'+(instr?'<div class="mcl">'+ICON.info+'<span>'+esc(instr)+'</span></div>':'')+(purp?'<div class="mcl">'+ICON.shield+'<span>'+esc(purp)+'</span></div>':'')+'<div class="mcw">'+fill(x.cnt,{n:curWords(i)})+'</div></div>'}
+  var wait=m[1].rule==="after"?'<div class="waitc">'+ICON.clock+'<span><b>'+x.sWaitT+'</b>'+fill(x.sWaitV,{w:m[1].wait})+'<small>'+x.sWaitHow+'</small></span></div>':'<div class="waitc off"><span>'+x.sWaitNo+'</span></div>';
+  return '<button class="back" type="button" data-go="alerts"><span class="flip">'+ICON.back+'</span>'+x.alerts+'</button><h2 class="ftitle">'+x.sTitle+'</h2>'+
+   (sample?'<div class="note">'+ICON.info+'<span>'+x.sSample+'</span></div>':'')+card(0)+wait+card(1)+'<div class="note info">'+ICON.shield+'<span>'+x.sNote+'</span></div>'},
+ edit:function(){var x=t(),f=CS.form,i=f.i,types=["tablet","capsule","cream","other"];
+  var seg=types.map(function(ty){return '<button type="button" data-type="'+ty+'" aria-pressed="'+(f.type===ty)+'">'+typeIcon(ty)+'<span>'+esc(typeLabelOf(ty,""))+'</span></button>'}).join("");
+  var when;
+  if(i===0)when='<div class="fg"><label class="fl" for="f_time">'+x.fWhen+'</label><input id="f_time" class="fi" type="time" value="'+esc(f.time)+'"></div>';
+  else when='<div class="fg"><div class="fl">'+x.fWhen+'</div><div class="seg col"><button type="button" data-rule="after" aria-pressed="'+(f.rule==="after")+'"><span>'+x.wAfter+'</span></button><button type="button" data-rule="time" aria-pressed="'+(f.rule==="time")+'"><span>'+x.wTime+'</span></button></div></div>'+
+   (f.rule==="after"?'<div class="fg"><label class="fl" for="f_wait">'+x.fWait+'</label><input id="f_wait" class="fi" type="number" min="1" max="600" step="1" inputmode="numeric" value="'+esc(f.wait)+'"></div>':'<div class="fg"><label class="fl" for="f_time">'+x.fWhen+'</label><input id="f_time" class="fi" type="time" value="'+esc(f.time)+'"></div>');
+  return '<button class="back" type="button" data-go="meds"><span class="flip">'+ICON.back+'</span>'+x.sTitle+'</button><div class="ftop">'+medtag(i)+'</div><div class="form">'+
+   '<div class="fg"><label class="fl" for="f_name">'+x.fName+'</label><input id="f_name" class="fi" type="text" maxlength="30" value="'+esc(f.name)+'"></div>'+
+   '<div class="fg"><div class="fl">'+x.fType+'</div><div class="seg types">'+seg+'</div></div>'+
+   (f.type==="other"?'<div class="fg"><label class="fl" for="f_other">'+x.fOther+'</label><input id="f_other" class="fi" type="text" maxlength="20" value="'+esc(f.other)+'"></div>':'')+
+   '<div class="fg"><label class="fl" for="f_dose">'+x.fDose+'</label><input id="f_dose" class="fi" type="text" maxlength="30" value="'+esc(f.dosage)+'"></div>'+
+   '<div class="fg"><label class="fl" for="f_instr">'+x.fInstr+'</label><input id="f_instr" class="fi" type="text" maxlength="80" value="'+esc(f.instr)+'"></div>'+
+   '<div class="fg"><label class="fl" for="f_purp">'+x.fPurp+'</label><input id="f_purp" class="fi" type="text" maxlength="60" value="'+esc(f.purpose)+'"></div>'+when+
+   '<div class="cnt" id="f_cnt" role="status"></div><div class="err" id="f_err" role="alert"></div>'+
+   '<div class="fbtns"><button class="btn-ack" id="f_save" type="button" data-act="save">'+ICON.check+x.save+'</button><button class="btn-ghost" type="button" data-go="meds">'+x.cancel+'</button></div></div>'}
+};
+var PV={s:"home",i:-1};
+function selAlert(){var a=ENG.A.filter(function(z){return z.id===CS.sel})[0];return a||ENG.A[ENG.A.length-1]}
+function lvl(u){var x=t();return '<div class="alv">'+(u==="urgent"?ICON.warn:ICON.info)+'<span>'+(u==="urgent"?x.urgent:x.normal)+'</span></div>'}
+function helpBody(x,i){return '<div class="okbig pop">'+ICON.phone+'</div><div class="ptext center"><h1 class="t1" style="font-size:40px">'+x.h1+'</h1><p class="t2">'+x.h2+'</p><p class="t3">'+esc(eff(i,"name"))+' · '+esc(typeLabel(i))+'</p></div>'}
+function btns(d){var x=t();return '<div class="btns"><button class="btn-done" type="button" data-act="done">'+ICON.check+'<span>'+x.done+'</span></button>'+(d.help?'<button class="btn-help" type="button" disabled>'+ICON.check+'<span>'+x.helpAsked+'</span></button>':'<button class="btn-help" type="button" data-act="help">'+ICON.life+'<span>'+x.help+'</span></button>')+'</div>'}
+
+/* ---------- the edit form ---------- */
+function openEdit(i){var m=CFG.meds[i];
+ CS.form={i:i,name:eff(i,"name"),type:m.type,other:m.other||"",dosage:eff(i,"dosage"),instr:eff(i,"instr"),purpose:eff(i,"purpose"),rule:i===0?"time":m.rule,time:m.time,wait:String(m.wait)};
+ CS.s="edit"}
+function readForm(){var f=CS.form;if(!f||CS.s!=="edit")return;
+ var g=function(id){var e=$(id);return e?e.value:null};
+ var v;if((v=g("f_name"))!==null)f.name=v;if((v=g("f_other"))!==null)f.other=v;if((v=g("f_dose"))!==null)f.dosage=v;if((v=g("f_instr"))!==null)f.instr=v;if((v=g("f_purp"))!==null)f.purpose=v;if((v=g("f_time"))!==null)f.time=v;if((v=g("f_wait"))!==null)f.wait=v}
+function formErrors(f){var x=t(),e=[];
+ if(!f.name.trim())e.push(x.eName);
+ if(remWords(f.name,typeLabelOf(f.type,f.other),f.dosage,f.instr,f.purpose)>15)e.push(x.eLong);
+ if(f.i===1&&f.rule==="after"){var w=+f.wait;if(!(w>=1&&w<=600&&Math.floor(w)===w))e.push(x.eWait)}
+ else if(!/^\d\d:\d\d$/.test(f.time||""))e.push(x.eTime);
+ return e}
+function refreshForm(){var f=CS.form;if(!f||CS.s!=="edit")return;readForm();
+ var n=remWords(f.name,typeLabelOf(f.type,f.other),f.dosage,f.instr,f.purpose),er=formErrors(f);
+ var c=$("f_cnt");if(c){c.textContent=fill(t().cnt,{n:n});c.className="cnt"+(n>15?" bad":"")}
+ var r=$("f_err");if(r)r.textContent=er[0]||"";
+ var s=$("f_save");if(s)s.disabled=er.length>0}
+function saveForm(){var f=CS.form;readForm();if(formErrors(f).length)return;var m=CFG.meds[f.i];
+ m.name=f.name.trim();m.type=f.type;m.other=f.other.trim();m.dosage=f.dosage.trim();m.instr=f.instr.trim();m.purpose=f.purpose.trim();
+ if(f.i===0){m.rule="time";m.time=f.time}else{m.rule=f.rule;if(f.rule==="after")m.wait=Math.floor(+f.wait);else m.time=f.time}
+ m.saved=true;storeCfg();lg("Karim saved Medicine "+(f.i+1)+": "+m.name+(f.i===1&&m.rule==="after"?", waiting time "+m.wait+" min":""));CS.s="meds"}
+
+/* ---------- scenarios (the chips above the phone) ---------- */
+function scen(n){var due=dueAt(0),w1=(+CFG.meds[1].wait)*60;
+ CS={s:"alerts",sel:null,form:null};engReset(due-600);ENG.who="nora";
+ if(n==="today"){}
+ else if(n==="rem1"){adv(600)}
+ else if(n==="fu"){adv(630)}
+ else if(n==="help"){adv(612);doHelp(0)}
+ else if(n==="done"){adv(608);doDone(0)}
+ else if(n==="rem2"){adv(608);doDone(0);var d2=dueAt(1);if(d2!==null)adv(d2-ENG.T)}
+ else if(n==="all"){adv(608);doDone(0);var d3=dueAt(1);if(d3!==null)adv(d3-ENG.T);adv(6);doDone(1)}
+ else{ENG.who="karim";
+  if(n==="urg"){adv(780)}
+  else if(n==="urgH"){adv(612);doHelp(0)}
+  else if(n==="det"){adv(780);CS.s="detail";CS.sel=ENG.A[0].id}
+  else if(n==="ack"){adv(780);adv(60);CS.sel=ENG.A[0].id;doAck(ENG.A[0].id);CS.s="acked"}
+  else if(n==="nd"){adv(780);adv(40);CS.sel=ENG.A[0].id;doAck(ENG.A[0].id);adv(30);doDone(0);CS.s="acked"}
+  else if(n==="meds"){CS.s="meds"}}
+ ENG.log=[];lg("Scenario: "+n);lastSig="";render()}
+var JUMPS=[
+ ["For Nora",[["today","Today",function(){scen("today")}],["rem1","Medicine 1 reminder",function(){scen("rem1")}],["fu","Reminder again",function(){scen("fu")}],["help","Help asked",function(){scen("help")}],["done","Medicine 1 done, waiting",function(){scen("done")}],["rem2","Medicine 2 reminder",function(){scen("rem2")}],["all","Both done",function(){scen("all")}]]],
+ ["For Karim",[["urg","Urgent: no answer",function(){scen("urg")}],["urgH","Urgent: Help",function(){scen("urgH")}],["det","Details",function(){scen("det")}],["ack","Acknowledged",function(){scen("ack")}],["nd","Nora answered",function(){scen("nd")}],["meds","Medicines and times",function(){scen("meds")}]]]
+];
+
+/* ---------- drawing ---------- */
+function curScreen(){if(ENG.who==="nora"){PV=pView();return PV.s}return CS.s}
+function renderJump(){var h="";JUMPS.forEach(function(g){h+='<div class="grp">'+g[0]+'</div>';g[1].forEach(function(c){h+='<button class="chip" type="button" data-j="'+c[0]+'">'+c[1]+'</button>'})});
+ h+='<div class="grp">Language</div><select class="sel" id="lang" aria-label="Language"><option value="en">English</option><option value="fr">Français (draft)</option><option value="ma">الدارجة المغربية (draft)</option></select>';
+ $("jump").innerHTML=h;$("lang").value=lang;$("lang").onchange=function(){readForm();lang=this.value;lastSig="";render()}}
+function render(){var s=$("screen"),rtl=lang==="ma",lc=rtl?"ar-MA":lang,name=curScreen();
+ s.setAttribute("dir",rtl?"rtl":"ltr");$("appscreen").setAttribute("lang",lc);s.setAttribute("lang",lc);
+ s.className="scr"+(name==="edit"||name==="meds"||name==="detail"?" tall":"");
+ s.innerHTML=V[name]();s.scrollTop=0;$("sbTime").textContent=hm(ENG.T);if(name==="edit")refreshForm();updateFac()}
+function signature(){var D=ENG.D,du=dueAt(1);
+ return [ENG.who,curScreen(),PV.i,D.map(function(d){return d.st+d.fu+d.help+d.esc}).join(","),ENG.A.map(function(a){return a.id+""+a.ack+a.called+a.noraDoneAt}).join(","),(du!==null&&D[0].st==="taken"&&D[1].st==="upcoming")?Math.ceil((du-ENG.T)/60):"-",CS.sel,lang].join("|")}
+function updateFac(){
+ $("fclock").textContent=hms(ENG.T);$("sbTime").textContent=hm(ENG.T);
+ $("pp").textContent=ENG.running?"Pause":"Play";
+ var nA=ENG.A.filter(function(a){return !a.ack}).length;
+ $("who_n").setAttribute("aria-pressed",ENG.who==="nora");$("who_k").setAttribute("aria-pressed",ENG.who==="karim");
+ $("who_k").textContent="Karim's phone"+(nA?" ("+nA+" new)":"");
+ var L=ENG.log.slice(-8).reverse().map(function(e){var off=REC?"  rec "+mmss(e.wall-REC.wall0):"";return '<div><b>'+hms(e.sim)+'</b><span>'+esc(e.txt)+off+'</span></div>'}).join("");
+ $("flog").innerHTML=L||'<div><span>Nothing has happened yet.</span></div>';
+ var rs=$("rstat");
+ if(!REC)rs.textContent="Not recording. The video length is the task, with no minimum.";
+ else if(REC.done)rs.innerHTML='<b>Task complete:</b> '+esc(REC.msg)+'. Time from the screen appearing to the tap: <b>'+mmss(REC.resp)+'</b>. You can stop the screen recording now.';
+ else rs.textContent="Recording the task. It ends by itself when the task is complete. Elapsed "+mmss(now()-REC.wall0)+".";
+ $("rbtn").textContent=REC&&!REC.done?"Stop":"Start task"}
+function frame(){render()}
+document.addEventListener("click",function(e){
+ var j=e.target.closest("[data-j]");if(j){JUMPS.forEach(function(g){g[1].forEach(function(c){if(c[0]===j.dataset.j)c[2]()})});return}
+ var b=e.target.closest("[data-go],[data-act],[data-edit],[data-type],[data-rule]");if(!b||!$("phone").contains(b))return;
+ if(b.dataset.type){readForm();CS.form.type=b.dataset.type;lastSig="";render();return}
+ if(b.dataset.rule){readForm();CS.form.rule=b.dataset.rule;lastSig="";render();return}
+ if(b.dataset.edit!==undefined){openEdit(+b.dataset.edit);render();return}
+ if(b.dataset.go){if(b.dataset.sel)CS.sel=+b.dataset.sel;if(ENG.who==="karim"){CS.s=b.dataset.go;render()}return}
+ var a=b.dataset.act;
+ if(a==="done"){doDone(active());render()}
+ else if(a==="help"){doHelp(active());render()}
+ else if(a==="ack"){doAck(selAlert().id);CS.s="acked";render()}
+ else if(a==="save"){saveForm();render()}
+});
+document.addEventListener("input",function(e){if(e.target&&e.target.classList&&e.target.classList.contains("fi"))refreshForm()});
+$("who_n").onclick=function(){ENG.who="nora";lastSig="";render()};
+$("who_k").onclick=function(){ENG.who="karim";if(CS.s==="edit"&&!CS.form)CS.s="alerts";lastSig="";render()};
+$("pp").onclick=function(){ENG.running=!ENG.running;updateFac()};
+$("spd").onchange=function(){ENG.speed=+this.value;ENG.acc=0};
+$("sk30").onclick=function(){adv(30);lastSig="";render()};
+$("skw").onclick=function(){var du=dueAt(1),d=ENG.D;if(d[0].st==="taken"&&d[1].st==="upcoming"&&du!==null&&du>ENG.T){lg("Facilitator skipped the waiting time (the real interval is unchanged)");adv(du-ENG.T);lastSig="";render()}};
+$("rst").onclick=function(){REC=null;scen("today")};
+$("rbtn").onclick=function(){
+ if(REC&&!REC.done){REC=null;updateFac();return}
+ var task=$("rtask").value,due=dueAt(0);CS={s:"alerts",sel:null,form:null};
+ engReset(task==="c1"?due-600:due-5);ENG.who=task==="c1"?"karim":"nora";if(task==="c1")adv(780);
+ ENG.speed=1;$("spd").value="1";ENG.log=[];REC={task:task,wall0:now(),done:false};lg("Recording started: "+$("rtask").selectedOptions[0].text);lastSig="";render()};
+$("rcopy").onclick=function(){var txt=ENG.log.map(function(e){return hms(e.sim)+"  "+e.txt+(REC?"  (rec "+mmss(e.wall-REC.wall0)+")":"")}).join("\n");
+ var ok=function(){$("rcopy").textContent="Copied"};
+ try{navigator.clipboard.writeText(txt).then(ok,function(){selectLog()})}catch(er){selectLog()}
+ function selectLog(){var r=document.createRange();r.selectNodeContents($("flog"));var s=getSelection();s.removeAllRanges();s.addRange(r)}};
+function fit(){var w=Math.min(1,(document.documentElement.clientWidth-32)/437);$("scaler").style.transform="scale("+w+")";$("box").style.width=(437*w)+"px";$("box").style.height=(888*w)+"px"}
+window.addEventListener("resize",fit);
+var lastWall=now();
+setInterval(function(){var n=now(),dt=Math.min(1,n-lastWall);lastWall=n;
+ if(ENG.running){ENG.acc+=dt*ENG.speed;var k=Math.floor(ENG.acc);if(k>0){ENG.acc-=k;adv(k)}}
+ var sg=signature();if(sg!==lastSig&&!(CS.s==="edit"&&ENG.who==="karim")){lastSig=sg;render()}else updateFac()},250);
+CFG=loadCfg();engReset(dueAt(0)-600);renderJump();render();fit();
+
+</script>
+
+</body>
+</html>
